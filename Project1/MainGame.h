@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "HLSLProgram.h"
 #include "Window.h"
+#include <vector>
 
 enum class GameState {
 	PLAY, EXIT
@@ -17,7 +18,7 @@ private:
 	float time;
 	Window window;
 	HLSLProgram program;
-	Sprite sprite;
+	vector<Sprite*> sprites; // Crear vector de sprites para agregar más de uno
 	void init();
 	void processInput();
 	void initShaders();

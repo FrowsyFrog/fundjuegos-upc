@@ -11,7 +11,9 @@ MainGame::MainGame() {
 }
 
 MainGame::~MainGame() {
-
+	for (auto sprite : sprites) {
+		delete sprite;
+	}
 }
 void MainGame::processInput() {
 	SDL_Event event;
@@ -63,14 +65,27 @@ void MainGame::draw() {
 
 	time += 0.02;
 
-	sprite.draw();
+	for (Sprite* spritePtr : sprites) {
+		spritePtr->draw();
+	}
+
 	program.unuse();
 	window.swapWindow();
 }
 
 void MainGame::run() {
 	init();
-	sprite.init(-1, -1, 1, 1, "Textures/imagen.png");
+
+	// Primer sprite
+	Sprite* sprite = new Sprite();
+	sprite->init(-1, -1, 1, 1, "Textures/imagen.png");
+	sprites.push_back(sprite);
+	
+	// Segundo sprite
+	Sprite* secondSprite = new Sprite();
+	secondSprite->init(0, 0, 1, 1, "Textures/imagen2.png");
+	sprites.push_back(secondSprite);
+
 	update();
 }
 
