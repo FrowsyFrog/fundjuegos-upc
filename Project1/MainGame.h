@@ -15,14 +15,14 @@ class MainGame
 private:
 	int width;
 	int height;
-	float time;
+	float counter;
 	Window window;
 	HLSLProgram program;
 	vector<Sprite*> sprites; // Crear vector de sprites para agregar más de uno
 	void init();
 	void processInput();
 	void initShaders();
-
+	void addRandomSprites();
 public:
 	MainGame();
 	~MainGame();

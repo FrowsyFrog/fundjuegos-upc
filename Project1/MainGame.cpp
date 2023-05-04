@@ -1,13 +1,15 @@
 #include "MainGame.h"
 #include <iostream>
 #include "Error.h"
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
 MainGame::MainGame() {
 	width = 800;
 	height = 600;
 	gameState = GameState::PLAY;
-	time = 0;
+	counter = 0;
 }
 
 MainGame::~MainGame() {
@@ -40,6 +42,7 @@ void MainGame::initShaders()
 }
 
 void MainGame::init() {
+	srand(time(NULL));
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window.create("Hola", width, height, 0);
 	GLenum error = glewInit();
@@ -51,19 +54,32 @@ void MainGame::init() {
 	initShaders();
 }
 
+void MainGame::addRandomSprites() {
+	float xPos = ((static_cast <float> (rand()) / RAND_MAX) * -1.0f); // Genera un valor aleatorio entre -1 y 0
+	float yPos = ((static_cast <float> (rand()) / RAND_MAX) * -1.0f);
+
+	counter = (rand() % 3) + 4; // El siguiente aparecerá en un tiempo aleatorio
+
+	Sprite* sprite = new Sprite();
+	sprite->init(xPos, yPos, 1, 1, "Textures/imagen.png");
+
+	// Agregar el sprite al vector de sprites
+	sprites.push_back(sprite);
+}
+
 void MainGame::draw() {
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	program.use();
 	glActiveTexture(GL_TEXTURE0);
 
-	GLuint timeLocation = program.getUniformLocation("time");
-	glUniform1f(timeLocation, time);
-
 	GLuint imageLocation = program.getUniformLocation("myImage");
 	glUniform1i(imageLocation, 0);
 
-	time += 0.02;
+	counter -= 0.02;
+
+	// Al llegar el counter a 0, se reinicia y se añade uno nuevo
+	if (counter <= 0) addRandomSprites();
 
 	for (Sprite* spritePtr : sprites) {
 		spritePtr->draw();
@@ -76,15 +92,7 @@ void MainGame::draw() {
 void MainGame::run() {
 	init();
 
-	// Primer sprite
-	Sprite* sprite = new Sprite();
-	sprite->init(-1, -1, 1, 1, "Textures/imagen.png");
-	sprites.push_back(sprite);
-	
-	// Segundo sprite
-	Sprite* secondSprite = new Sprite();
-	secondSprite->init(0, 0, 1, 1, "Textures/imagen2.png");
-	sprites.push_back(secondSprite);
+	addRandomSprites(); // Colocar un cuadro inicial
 
 	update();
 }
