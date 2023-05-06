@@ -8,6 +8,7 @@ MainGame::MainGame() {
 	height = 600;
 	gameState = GameState::PLAY;
 	time = 0;
+	camera2D.init(width, height);
 }
 
 MainGame::~MainGame() {
@@ -22,11 +23,20 @@ void MainGame::processInput() {
 			gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
+			inputManager.setMouseCoords(event.motion.x, event.motion.y);
 			//cout << event.motion.x << " , " << event.motion.y << endl;
 			break;
+		case SDL_KEYUP:
+			inputManager.releaseKey(event.key.keysym.sym);
+			break;
+		case SDL_KEYDOWN:
+			inputManager.pressKey(event.key.keysym.sym);
+			break;
 		}
+		handleInput();
 	}
 }
+
 
 void MainGame::initShaders()
 {
@@ -35,6 +45,23 @@ void MainGame::initShaders()
 	program.addAtribute("vertexColor");
 	program.addAtribute("vertexUV");
 	program.linkShader();
+}
+
+void MainGame::handleInput()
+{
+	if (inputManager.isKeyPressed(SDLK_w)) {
+		cout << "presionando W" << endl;
+		camera2D.setPosition(camera2D.getPosition() + glm::vec2(0.0, 5.0));
+	}
+	if (inputManager.isKeyPressed(SDLK_a)) {
+		cout << "presionando A" << endl;
+	}
+	if (inputManager.isKeyPressed(SDLK_s)) {
+		cout << "presionando S" << endl;
+	}
+	if (inputManager.isKeyPressed(SDLK_d)) {
+		cout << "presionando D" << endl;
+	}
 }
 
 void MainGame::init() {
@@ -61,7 +88,13 @@ void MainGame::draw() {
 	GLuint imageLocation = program.getUniformLocation("myImage");
 	glUniform1i(imageLocation, 0);
 
+	glm::mat4 cameraMatrix = camera2D.getCameraMatrix();
+	GLuint pCameraLocation = program.getUniformLocation("pCamera");
+	glUniformMatrix4fv(pCameraLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+
 	time += 0.02;
+
 
 	sprite.draw();
 	program.unuse();
