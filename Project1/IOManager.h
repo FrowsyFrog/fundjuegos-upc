@@ -8,3 +8,4 @@ class IOManager
 public:
 	static bool readFiletoBuffer(string filePath, vector<unsigned char>& buffer);
 };
+

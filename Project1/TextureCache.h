@@ -14,3 +14,4 @@ public:
 	~TextureCache();
 	GLTexture getTexture(string texturePath);
 };
+

@@ -10,3 +10,4 @@ private:
 public:
 	static GLTexture getTexture(string texturePath);
 };
+

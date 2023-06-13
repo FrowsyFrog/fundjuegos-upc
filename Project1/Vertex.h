@@ -15,7 +15,7 @@ struct Color {
 	GLubyte g;
 	GLubyte b;
 	GLubyte a;
-	void set(GLubyte _r, GLubyte _g, GLubyte _b, GLubyte _a) {
+	void set(GLubyte _r,GLubyte _g,GLubyte _b,GLubyte _a) {
 		r = _r;
 		g = _g;
 		b = _b;
@@ -36,7 +36,7 @@ struct Vertex {
 	Position position;
 	Color color;
 	UV uv;
-	void setPosition(float x, float y) {
+	void setPosition(float x,float y) {
 		position.set(x, y);
 	}
 	void setColor(GLubyte _r, GLubyte _g, GLubyte _b, GLubyte _a) {

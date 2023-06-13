@@ -26,6 +26,7 @@ public:
 	int getScreenHeight() {
 		return screenHeight;
 	}
-
-	int create(string windowName, int screenWidth, int screenHeight, unsigned int currentFlags);
+	int create(string windowName, int screenWidth, int screenHeight,
+		unsigned int currentFlags);
 };
+

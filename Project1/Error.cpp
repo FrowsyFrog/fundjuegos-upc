@@ -1,4 +1,5 @@
 #include <iostream>
+
 using namespace std;
 
 void fatalError(string errorString) {

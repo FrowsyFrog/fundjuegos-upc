@@ -13,9 +13,13 @@ private:
 	glm::mat4 orthoMatrix;
 public:
 	void update();
-	void init(int screenWidth, int screenHeight);
+	void init(int screenWidth,int screenHeight);
 	glm::vec2 getPosition() {
 		return position;
+	}
+	glm::vec2 convertToScreenWorld(glm::vec2 screenScords);
+	float getScale() {
+		return scale;
 	}
 	void setPosition(const glm::vec2& newPosition) {
 		position = newPosition;

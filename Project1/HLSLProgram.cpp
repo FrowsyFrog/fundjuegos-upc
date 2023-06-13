@@ -6,7 +6,7 @@
 
 using namespace std;
 
-HLSLProgram::HLSLProgram() :programID(0), vertexShaderID(0), fragmentShaderID(0), numAtribute(0) {
+HLSLProgram::HLSLProgram():programID(0),vertexShaderID(0),fragmentShaderID(0),numAtribute(0) {
 }
 
 HLSLProgram::~HLSLProgram() {
@@ -19,14 +19,14 @@ void HLSLProgram::addAtribute(const string attributeName) {
 
 void HLSLProgram::use() {
 	glUseProgram(programID);
-	for (int i = 0; i < numAtribute; i++)
+	for(int i = 0; i < numAtribute; i++)
 	{
 		glEnableVertexAttribArray(i);
 	}
 }
 
 void HLSLProgram::unuse() {
-	glUseProgram(0);
+	glUseProgram(0); 
 	for (int i = 0; i < numAtribute; i++)
 	{
 		glDisableVertexAttribArray(i);
@@ -54,7 +54,7 @@ void HLSLProgram::compileShader(const string& shaderPath, GLuint id) {
 	if (shaderFile.fail()) {
 		fatalError(" Coul not open " + shaderPath);
 	}
-	while (getline(shaderFile, line)) {
+	while (getline(shaderFile,line)) {
 		filecontent += line + "\n";
 	}
 	shaderFile.close();
@@ -105,4 +105,5 @@ GLuint HLSLProgram::getUniformLocation(const string& name)
 	}
 	return location;
 }
+
 

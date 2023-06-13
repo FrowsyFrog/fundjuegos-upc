@@ -6,9 +6,14 @@
 #include "Window.h"
 #include "Camera2D.h"
 #include "InputManager.h"
+#include "Level.h"
+#include "Player.h"
+#include "Human.h"
+#include "Zombie.h"
+#include "SpriteBatch.h"
 
 enum class GameState {
-	PLAY, EXIT
+	PLAY,EXIT
 };
 
 class MainGame
@@ -16,23 +21,30 @@ class MainGame
 private:
 	int width;
 	int height;
-	float time;
+	SpriteBatch spriteBatch;
+	vector<Level*> levels;
+	vector<Human*> humans;
+	vector<Zombie*> zombies;
+	Player* player;
+	int currentLevel;
 	Window window;
 	HLSLProgram program;
 	Sprite sprite;
 	Camera2D camera2D;
+	InputManager inputManager;
 	void init();
+	void initLevel();
 	void processInput();
 	void initShaders();
 	void handleInput();
-	InputManager inputManager;
-
+	void updateElements();
 public:
 	MainGame();
 	~MainGame();
 	GameState gameState;
-
+	
 	void run();
 	void draw();
 	void update();
 };
+

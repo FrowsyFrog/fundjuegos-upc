@@ -1,5 +1,5 @@
 #pragma once
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include <unordered_map>
 using namespace std;
 
@@ -10,7 +10,7 @@ private:
 	glm::vec2 mouseCoords;
 public:
 	InputManager();
-	glm::vec2 getMouseCoorders(float x, float y){
+	glm::vec2 getMouseCoords() {
 		return mouseCoords;
 	}
 	void setMouseCoords(float x, float y);
