@@ -9,8 +9,10 @@
 #include "Level.h"
 #include "Player.h"
 #include "Human.h"
+#include "Bullet.h"
 #include "Zombie.h"
 #include "SpriteBatch.h"
+#include "SpriteFont.h"
 
 enum class GameState {
 	PLAY,EXIT
@@ -22,9 +24,12 @@ private:
 	int width;
 	int height;
 	SpriteBatch spriteBatch;
+	SpriteBatch hudBatch;
 	vector<Level*> levels;
+	vector<Bullet*> bullets;
 	vector<Human*> humans;
 	vector<Zombie*> zombies;
+	SpriteFont* spriteFont;
 	Player* player;
 	int currentLevel;
 	Window window;
@@ -38,6 +43,7 @@ private:
 	void initShaders();
 	void handleInput();
 	void updateElements();
+	void createBullet();
 public:
 	MainGame();
 	~MainGame();
@@ -45,6 +51,7 @@ public:
 	
 	void run();
 	void draw();
+	void drawHud();
 	void update();
 };
 
