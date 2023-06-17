@@ -114,24 +114,14 @@ void MainGame::initLevel() {
 		humans.push_back(new Human());
 		glm::vec2 pos(randPosX(randomEngine) * TILE_WIDTH,
 			randPosY(randomEngine) * TILE_WIDTH);
-		humans.back()->init(4.0f, pos);
+		humans.back()->init(1.0f, pos);
 	}
 
-	for (size_t i = 0; i < levels[currentLevel]->getNumZombies(); i++)
-	{
-		zombies.push_back(new Zombie());
-		glm::vec2 pos(randPosX(randomEngine) * TILE_WIDTH,
-			randPosY(randomEngine) * TILE_WIDTH);
-		zombies.back()->init(2.0f, pos);
-	}
 }
 
 void MainGame::draw() {
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_BLEND); // Habilitar blending para transparencia
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Modo de mezcla para transparencia
-
 	program.use();
 	glActiveTexture(GL_TEXTURE0);
 
@@ -146,10 +136,6 @@ void MainGame::draw() {
 	for (size_t i = 0; i < humans.size(); i++)
 	{
 		humans[i]->draw(spriteBatch);
-	}
-	for (size_t i = 0; i < zombies.size(); i++)
-	{
-		zombies[i]->draw(spriteBatch);
 	}
 	spriteBatch.end();
 	spriteBatch.renderBatch();
@@ -168,11 +154,6 @@ void MainGame::updateElements() {
 	for (size_t i = 0; i < humans.size(); i++)
 	{
 		humans[i]->update(levels[currentLevel]->getLevelData(),humans,zombies);
-	}
-
-	for (size_t i = 0; i < zombies.size(); i++)
-	{
-		zombies[i]->update(levels[currentLevel]->getLevelData(), humans, zombies);
 	}
 }
 
