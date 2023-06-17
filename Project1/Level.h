@@ -10,7 +10,6 @@ class Level
 private:
 	vector<string> levelData;
 	int numHumans;
-	int numZombies;
 	void parseLevel();
 	glm::vec2 playerPosition;
 	vector<glm::vec2> zombiesPosition;
@@ -18,9 +17,6 @@ private:
 public:
 	int getNumHumans()const {
 		return numHumans;
-	}
-	int getNumZombies()const {
-		return numZombies;
 	}
 	glm::vec2 getPlayerPosition()const {
 		return playerPosition;

@@ -25,11 +25,11 @@ void MainGame::processInput() {
 				gameState = GameState::EXIT;
 				break;
 			case SDL_MOUSEMOTION:
-				//cout << "Posicion del mousec " << event.motion.x << " " << event.motion.y << endl;
+				/*cout << "Posicion del mousec " << event.motion.x << " " << event.motion.y << endl;
 				inputManager.setMouseCoords(event.motion.x, event.motion.y);
 				glm::vec2 mouseCoords = camera2D.convertToScreenWorld(inputManager.getMouseCoords());
 				//cout << "Nueva posicion de acuerdo a camara " <<  mouseCoords.x
-					//	<< " " << mouseCoords.y << endl;
+					//	<< " " << mouseCoords.y << endl;*/
 				break;
 			case SDL_KEYUP:
 				inputManager.releaseKey(event.key.keysym.sym);
@@ -61,6 +61,7 @@ void MainGame::handleInput()
 	}
 	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
 		//cout << "CLICK IZQUIERDO" << endl;
+		createBullet();
 	}
 
 	if (inputManager.isKeyPressed(SDL_BUTTON_RIGHT)) {
@@ -70,6 +71,19 @@ void MainGame::handleInput()
 	if (inputManager.isKeyPressed(SDL_BUTTON_MIDDLE)) {
 		//cout << "CLICK CENTRO" << endl;
 	}
+}
+
+void MainGame::createBullet() {
+	glm::vec2 mouseCoords = 
+			camera2D.convertToScreenWorld(inputManager.getMouseCoords());
+	glm::vec2 playerPosition(0, 0);
+	glm::vec2 direction = mouseCoords - player->getPosition();
+	direction = glm::normalize(direction);
+	//bullets.emplace_back(playerPosition, direction, 1.0f, 1000);
+	
+	//bullets.push_back(new Bullet(playerPosition, direction, 1.0f, 1000));
+	Bullet* bullet = new Bullet(player->getPosition(), direction, 1.0f, 1000);
+	bullets.push_back(bullet);
 }
 
 void MainGame::initShaders()
@@ -88,7 +102,6 @@ void MainGame::init() {
 	if (error != GLEW_OK) {
 		fatalError("Glew not initialized");
 	}
-	
 	glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 	initLevel();
 	initShaders();
@@ -99,8 +112,7 @@ void MainGame::initLevel() {
 	currentLevel = 0;
 	//inicializar humans,player y zombie
 	player = new Player();
-	// edito la velocidad //
-	player->init(10.0f, levels[currentLevel]->getPlayerPosition(), &inputManager);
+	player->init(5.0f, levels[currentLevel]->getPlayerPosition(), &inputManager);
 	spriteBatch.init();
 
 	std::mt19937 randomEngine(time(nullptr));
@@ -114,24 +126,23 @@ void MainGame::initLevel() {
 		humans.push_back(new Human());
 		glm::vec2 pos(randPosX(randomEngine) * TILE_WIDTH,
 			randPosY(randomEngine) * TILE_WIDTH);
-		humans.back()->init(4.0f, pos);
+		humans.back()->init(1.0f, pos);
 	}
 
-	for (size_t i = 0; i < levels[currentLevel]->getNumZombies(); i++)
+	const std::vector<glm::vec2>& zombiePosition =
+		levels[currentLevel]->getZombiesPosition();
+
+	for (size_t i = 0; i < zombiePosition.size(); i++)
 	{
 		zombies.push_back(new Zombie());
-		glm::vec2 pos(randPosX(randomEngine) * TILE_WIDTH,
-			randPosY(randomEngine) * TILE_WIDTH);
-		zombies.back()->init(2.0f, pos);
+		zombies.back()->init(1.3f, zombiePosition[i]);
 	}
+
 }
 
 void MainGame::draw() {
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_BLEND); // Habilitar blending para transparencia
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Modo de mezcla para transparencia
-
 	program.use();
 	glActiveTexture(GL_TEXTURE0);
 
@@ -146,6 +157,10 @@ void MainGame::draw() {
 	for (size_t i = 0; i < humans.size(); i++)
 	{
 		humans[i]->draw(spriteBatch);
+	}
+	for (size_t i = 0; i < bullets.size(); i++)
+	{
+		bullets[i]->draw(spriteBatch);
 	}
 	for (size_t i = 0; i < zombies.size(); i++)
 	{
@@ -169,10 +184,29 @@ void MainGame::updateElements() {
 	{
 		humans[i]->update(levels[currentLevel]->getLevelData(),humans,zombies);
 	}
-
-	for (size_t i = 0; i < zombies.size(); i++)
-	{
+	for (size_t i = 0; i < zombies.size(); i++) {
 		zombies[i]->update(levels[currentLevel]->getLevelData(), humans, zombies);
+
+		for (size_t j = 0; j < humans.size(); j++)
+		{
+			if (zombies[i]->collideWithAgent(humans[j])) {
+				zombies.push_back(new Zombie());
+				zombies.back()->init(1.3f, humans[j]->getPosition());
+				delete humans[j];
+				humans[j] = humans.back();
+				humans.pop_back();
+			}
+		}
+	}
+	for (size_t i = 0; i < bullets.size();)
+	{
+		if (bullets[i]->update()) {
+			bullets[i] = bullets.back();
+			bullets.pop_back();
+		}
+		else {
+			i++;
+		}
 	}
 }
 
