@@ -1,1 +1,0 @@
-Estimado padawan los archivos glew32.dll y SDL2.dll debes copiarlos en tu carpeta Debug :D GAAAA
