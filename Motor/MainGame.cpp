@@ -223,12 +223,10 @@ void MainGame::updateElements() {
 			delete zombies[i];
 			zombies[i] = zombies.back();
 			zombies.pop_back();
-			player->setVidas(player->getVidas() - 1);
 			Color otroColor = player->getColor();
 			otroColor.a -= alphaReduce;
 			player->setColor(otroColor);
-			if (player->getVidas() <= 0) {
-				player->setAlive(false);
+			if (!player->isDead()) {
 				cout << "Presiona R para revivir." << endl;
 			}
 

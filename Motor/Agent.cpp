@@ -47,6 +47,7 @@ void Agent::collideWithTile(glm::vec2 tilePos)
 
 Agent::Agent()
 {
+    alive = true;
 }
 
 void Agent::draw(SpriteBatch& spriteBatch)
@@ -80,6 +81,16 @@ bool Agent::collideWithLevel(const vector<string>& levelData)
 
 Agent::~Agent()
 {
+}
+
+bool Agent::isDead() {
+    if (alive) {
+        vidas--;
+    }
+    if (vidas <= 0) {
+        alive = false;
+    }
+    return alive;
 }
 
 bool Agent::collideWithAgent(Agent* agent)
