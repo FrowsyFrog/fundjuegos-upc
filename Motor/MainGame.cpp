@@ -9,7 +9,7 @@ using namespace std;
 MainGame::MainGame() {
 	width = 800;
 	height = 600;
-	gameState = GameState::PLAY;	
+	gameState = GameState::PLAY;
 	camera2D.init(width, height);
 }
 
@@ -21,32 +21,32 @@ void MainGame::processInput() {
 	while (SDL_PollEvent(&event)) {
 		switch (event.type)
 		{
-			case SDL_QUIT:
-				gameState = GameState::EXIT;
-				break;
-			case SDL_MOUSEMOTION:
-				/*cout << "Posicion del mousec " << event.motion.x << " " << event.motion.y << endl;
-				inputManager.setMouseCoords(event.motion.x, event.motion.y);
-				glm::vec2 mouseCoords = camera2D.convertToScreenWorld(inputManager.getMouseCoords());
-				//cout << "Nueva posicion de acuerdo a camara " <<  mouseCoords.x
-					//	<< " " << mouseCoords.y << endl;*/
-				break;
-			case SDL_KEYUP:
-				inputManager.releaseKey(event.key.keysym.sym);
-				break;
-			case SDL_KEYDOWN:
-				inputManager.pressKey(event.key.keysym.sym);
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				inputManager.pressKey(event.button.button);
-				break;
-			case SDL_MOUSEBUTTONUP:
-				inputManager.releaseKey(event.button.button);
-				break;
+		case SDL_QUIT:
+			gameState = GameState::EXIT;
+			break;
+		case SDL_MOUSEMOTION:
+			/*cout << "Posicion del mousec " << event.motion.x << " " << event.motion.y << endl;
+			inputManager.setMouseCoords(event.motion.x, event.motion.y);
+			glm::vec2 mouseCoords = camera2D.convertToScreenWorld(inputManager.getMouseCoords());
+			//cout << "Nueva posicion de acuerdo a camara " <<  mouseCoords.x
+				//	<< " " << mouseCoords.y << endl;*/
+			break;
+		case SDL_KEYUP:
+			inputManager.releaseKey(event.key.keysym.sym);
+			break;
+		case SDL_KEYDOWN:
+			inputManager.pressKey(event.key.keysym.sym);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			inputManager.pressKey(event.button.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			inputManager.releaseKey(event.button.button);
+			break;
 		}
 		handleInput();
 	}
-	
+
 }
 
 void MainGame::handleInput()
@@ -74,13 +74,13 @@ void MainGame::handleInput()
 }
 
 void MainGame::createBullet() {
-	glm::vec2 mouseCoords = 
-			camera2D.convertToScreenWorld(inputManager.getMouseCoords());
+	glm::vec2 mouseCoords =
+		camera2D.convertToScreenWorld(inputManager.getMouseCoords());
 	glm::vec2 playerPosition(0, 0);
 	glm::vec2 direction = mouseCoords - player->getPosition();
 	direction = glm::normalize(direction);
 	//bullets.emplace_back(playerPosition, direction, 1.0f, 1000);
-	
+
 	//bullets.push_back(new Bullet(playerPosition, direction, 1.0f, 1000));
 	Bullet* bullet = new Bullet(player->getPosition(), direction, 1.0f, 1000);
 	bullets.push_back(bullet);
@@ -97,7 +97,7 @@ void MainGame::initShaders()
 
 void MainGame::init() {
 	SDL_Init(SDL_INIT_EVERYTHING);
-	window.create("Mundo 1", width, height,0);
+	window.create("Mundo 1", width, height, 0);
 	GLenum error = glewInit();
 	if (error != GLEW_OK) {
 		fatalError("Glew not initialized");
@@ -138,7 +138,8 @@ void MainGame::initLevel() {
 		zombies.push_back(new Zombie());
 		zombies.back()->init(1.3f, zombiePosition[i]);
 	}
-	spriteFont = new SpriteFont("Fonts/Golden Age.ttf", 64);
+	spriteFont = new SpriteFont("Fonts/arial.ttf", 64);
+
 }
 
 void MainGame::draw() {
@@ -183,11 +184,11 @@ void MainGame::drawHud()
 
 	char buffer[256];
 	hudBatch.begin();
-	sprintf_s(buffer, "HOLAAAAAAAAA");
+	sprintf_s(buffer, "HOLAAAAAAA");
 	Color color;
 	color.set(255, 255, 255, 255);
 	spriteFont->draw(hudBatch, buffer, glm::vec2(0, 0),
-		glm::vec2(0.5), 0.0f, color);
+		glm::vec2(0.5), 0.0f, Color(255, 255, 255, 255));
 	hudBatch.end();
 	hudBatch.renderBatch();
 }
@@ -201,7 +202,7 @@ void MainGame::updateElements() {
 	player->update(levels[currentLevel]->getLevelData(), humans, zombies);
 	for (size_t i = 0; i < humans.size(); i++)
 	{
-		humans[i]->update(levels[currentLevel]->getLevelData(),humans,zombies);
+		humans[i]->update(levels[currentLevel]->getLevelData(), humans, zombies);
 	}
 	for (size_t i = 0; i < zombies.size(); i++) {
 		zombies[i]->update(levels[currentLevel]->getLevelData(), humans, zombies);

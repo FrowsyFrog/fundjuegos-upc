@@ -15,7 +15,7 @@
 #include "SpriteFont.h"
 
 enum class GameState {
-	PLAY,EXIT
+	PLAY, EXIT
 };
 
 class MainGame
@@ -23,13 +23,13 @@ class MainGame
 private:
 	int width;
 	int height;
+	SpriteFont* spriteFont;
 	SpriteBatch spriteBatch;
 	SpriteBatch hudBatch;
 	vector<Level*> levels;
 	vector<Bullet*> bullets;
 	vector<Human*> humans;
 	vector<Zombie*> zombies;
-	SpriteFont* spriteFont;
 	Player* player;
 	int currentLevel;
 	Window window;
@@ -48,10 +48,9 @@ public:
 	MainGame();
 	~MainGame();
 	GameState gameState;
-	
+
 	void run();
 	void draw();
 	void drawHud();
 	void update();
 };
-
