@@ -16,6 +16,7 @@ class Agent
 protected:
 	string path;
 	glm::vec2 position;
+	bool alive = true;
 	float speed;
 	Color color;
 	void checkTilePosition(const vector<string>& levelData,
@@ -23,6 +24,19 @@ protected:
 	void collideWithTile(glm::vec2 tilePos);
 public:
 	Agent();
+	bool getAlive() {
+		return alive;
+	}
+	void setColor(Color color) {
+		this->color = color;
+	}
+	Color getColor() {
+		return this->color;
+	}
+	void setAlive(bool alive) {
+		this->alive = alive;
+	}
+
 	glm::vec2 getPosition() {
 		return position;
 	}

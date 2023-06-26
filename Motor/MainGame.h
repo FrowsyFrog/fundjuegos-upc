@@ -31,6 +31,7 @@ private:
 	vector<Human*> humans;
 	vector<Zombie*> zombies;
 	Player* player;
+	double alphaReduce;
 	int currentLevel;
 	Window window;
 	HLSLProgram program;
@@ -53,4 +54,5 @@ public:
 	void draw();
 	void drawHud();
 	void update();
+	void reset();
 };

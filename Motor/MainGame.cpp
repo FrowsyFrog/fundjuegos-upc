@@ -68,6 +68,11 @@ void MainGame::handleInput()
 		//cout << "CLICK DERECHo" << endl;
 	}
 
+	if (inputManager.isKeyPressed(SDLK_r) && !player->getAlive()) {
+		reset();
+		initLevel();
+	}
+
 	if (inputManager.isKeyPressed(SDL_BUTTON_MIDDLE)) {
 		//cout << "CLICK CENTRO" << endl;
 	}
@@ -112,7 +117,8 @@ void MainGame::initLevel() {
 	currentLevel = 0;
 	//inicializar humans,player y zombie
 	player = new Player();
-	player->init(5.0f, levels[currentLevel]->getPlayerPosition(), &inputManager);
+	player->init(5, 5.0f, levels[currentLevel]->getPlayerPosition(), &inputManager);
+	alphaReduce = 255 / player->getVidas();
 	spriteBatch.init();
 	hudBatch.init();
 
@@ -199,6 +205,13 @@ void MainGame::run() {
 }
 
 void MainGame::updateElements() {
+	if (!player->getAlive()) {
+		glClearColor(0.5f, 0.4f, 0.3f, 1.0f);
+		return;
+	}
+	camera2D.update();
+	camera2D.setPosition(player->getPosition());
+
 	player->update(levels[currentLevel]->getLevelData(), humans, zombies);
 	for (size_t i = 0; i < humans.size(); i++)
 	{
@@ -206,6 +219,21 @@ void MainGame::updateElements() {
 	}
 	for (size_t i = 0; i < zombies.size(); i++) {
 		zombies[i]->update(levels[currentLevel]->getLevelData(), humans, zombies);
+		if (zombies[i]->collideWithAgent(player)) {
+			delete zombies[i];
+			zombies[i] = zombies.back();
+			zombies.pop_back();
+			player->setVidas(player->getVidas() - 1);
+			Color otroColor = player->getColor();
+			otroColor.a -= alphaReduce;
+			player->setColor(otroColor);
+			if (player->getVidas() <= 0) {
+				player->setAlive(false);
+				cout << "Presiona R para revivir." << endl;
+			}
+
+			break;
+		}
 
 		for (size_t j = 0; j < humans.size(); j++)
 		{
@@ -233,9 +261,23 @@ void MainGame::updateElements() {
 void MainGame::update() {
 	while (gameState != GameState::EXIT) {
 		draw();
-		camera2D.update();
-		camera2D.setPosition(player->getPosition());
 		processInput();
 		updateElements();
 	}
+}
+
+void MainGame::reset()
+{
+	glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+	for (size_t i = 0; i < zombies.size(); i++) {
+		delete zombies[i];
+	}
+	zombies.clear();
+	for (size_t i = 0; i < humans.size(); ++i) {
+		delete humans[i];
+	}
+	humans.clear();
+	delete player;
+	levels.clear();
+	currentLevel = 0;
 }
