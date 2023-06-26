@@ -76,6 +76,11 @@ void MainGame::handleInput()
 	if (inputManager.isKeyPressed(SDL_BUTTON_MIDDLE)) {
 		//cout << "CLICK CENTRO" << endl;
 	}
+
+	if (inputManager.isKeyPressed(SDLK_f)) {
+		cout << "\nPresionaste F para ver contador:\n";
+		cout << "# Zombies: " << zombies.size() << " | # Humans: " << humans.size() << endl;
+	}
 }
 
 void MainGame::createBullet() {
@@ -145,6 +150,9 @@ void MainGame::initLevel() {
 		zombies.back()->init(1.3f, zombiePosition[i]);
 	}
 	spriteFont = new SpriteFont("Fonts/arial.ttf", 64);
+
+	cout << "Contador Inicial:\n";
+	cout << "# Zombies: " << zombies.size() << " | # Humans: " << humans.size() << endl << endl;
 
 }
 
@@ -226,9 +234,15 @@ void MainGame::updateElements() {
 			Color otroColor = player->getColor();
 			otroColor.a -= alphaReduce;
 			player->setColor(otroColor);
+
+			cout << "\nHas matado a un zombie\n";
+			cout << "# Zombies: " << zombies.size() << " | # Humans: " << humans.size() << endl << endl;
+
 			if (!player->isDead()) {
 				cout << "Presiona R para revivir." << endl;
 			}
+
+
 
 			break;
 		}
@@ -241,6 +255,10 @@ void MainGame::updateElements() {
 				delete humans[j];
 				humans[j] = humans.back();
 				humans.pop_back();
+
+				cout << "\nUn humano se convierte en zombie\n";
+				cout << "# Zombies: " << zombies.size() << " | # Humans: " << humans.size() << endl << endl;
+
 			}
 		}
 	}
